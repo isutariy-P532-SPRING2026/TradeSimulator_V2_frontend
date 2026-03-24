@@ -300,8 +300,10 @@
 <script>
     let stockPrices = {};
 
+    const BASE = 'https://YOUR-APP.onrender.com';
+
     function getActiveUser() {
-    return document.getElementById('activeUser')?.value || 'alice';
+        return document.getElementById('activeUser')?.value || 'alice';
     }
 
     // ── Clock ──────────────────────────────────────────
@@ -313,7 +315,7 @@
 
     // ── Fetch stock prices ─────────────────────────────
     async function fetchStocks() {
-        const res  = await fetch('/api/stocks');
+        const res = await fetch(`${BASE}/api/stocks`);
         const data = await res.json();
         stockPrices = data;
         const grid = document.getElementById('stockGrid');
@@ -334,7 +336,7 @@
 
     // ── Fetch portfolio ────────────────────────────────
     async function fetchPortfolio() {
-        const res = await fetch(`/api/portfolio?userId=${getActiveUser()}`);
+        const res = await fetch(`${BASE}/api/portfolio?userId=${getActiveUser()}`);
         const data = await res.json();
 
         document.getElementById('portfolioStats').innerHTML = `
@@ -368,7 +370,7 @@
 
     // ── Fetch orders ───────────────────────────────────
     async function fetchOrders() {
-        const res = await fetch(`/api/orders?userId=${getActiveUser()}`);
+        const res = await fetch(`${BASE}/api/orders?userId=${getActiveUser()}`);
         const data = await res.json();
 
         const pb = document.getElementById('pendingBody');
@@ -406,7 +408,7 @@
             limitPrice: document.getElementById('limitPrice').value || '0'
         };
 
-        const res = await fetch(`/api/orders?userId=${getActiveUser()}`, {
+        const res = await fetch(`${BASE}/api/orders?userId=${getActiveUser()}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
@@ -435,7 +437,7 @@
     
     async function setStrategy() {
         const strategy = document.getElementById('strategySelect').value;
-        await fetch('/api/strategy', {
+        const res = await fetch(`${BASE}/api/strategy`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ strategy })
@@ -448,7 +450,7 @@
         if (document.getElementById('ch_sms').checked)       channels.push('SMS');
         if (document.getElementById('ch_dashboard').checked) channels.push('DASHBOARD');
         
-        await fetch(`/api/notifications?userId=${getActiveUser()}`, {
+        const res = await fetch(`${BASE}/api/notifications?userId=${getActiveUser()}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ channels })
@@ -461,7 +463,7 @@
     }
 
     async function fetchAlerts() {
-        const res = await fetch(`/api/alerts?userId=${getActiveUser()}`);
+        const res = await fetch(`${BASE}/api/alerts?userId=${getActiveUser()}`);
         const data = await res.json();
         const badge = document.getElementById('alertBadge');
         if (data.unread > 0) {
@@ -473,7 +475,7 @@
     }
 
     async function loadNotifPrefs() {
-        const res = await fetch(`/api/notifications?userId=${getActiveUser()}`);
+        const res = await fetch(`${BASE}/api/notifications?userId=${getActiveUser()}`);
         const data = await res.json();
         document.getElementById('ch_email').checked     = data.channels.includes('EMAIL');
         document.getElementById('ch_sms').checked       = data.channels.includes('SMS');
