@@ -300,7 +300,9 @@
 <script>
     let stockPrices = {};
 
-    const BASE = 'https://tradesimulator-v2-backend.onrender.com';
+    const BASE = window.location.hostname === 'localhost'
+        ? ''
+        : 'https://tradesimulator-v2-backend.onrender.com';
 
     function getActiveUser() {
         return document.getElementById('activeUser')?.value || 'alice';
